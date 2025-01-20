@@ -96,3 +96,15 @@ export const logout = async (req, res) => {
       .json({ success: false, message: `ERROR IN [logout] ${error.message}` });
   }
 };
+
+export const checkAuth = async (req, res) => {
+  try {
+    const user = req.user;
+    console.info(user);
+    return res.status(200).json({ success: true, user: user });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: `ERROR IN checkAuth ${error.message}` });
+  }
+};
