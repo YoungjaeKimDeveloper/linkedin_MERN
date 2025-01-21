@@ -1,6 +1,10 @@
 import express from "express";
 import { verifyToken } from "../middleware/verifyToken.js";
-
+import {
+  getUserNotifications,
+  markNotificationAsRead,
+  deleteNotification,
+} from "../controllers/notification.controller.js";
 const router = express.Router();
 // 사용자별로 Notification 불러오기
 router.get("/", verifyToken, getUserNotifications);
