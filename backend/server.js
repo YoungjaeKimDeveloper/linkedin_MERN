@@ -8,6 +8,7 @@ import { connectDB } from "./lib/connectDB.js";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import postRoutes from "./routes/post.routes.js";
+import connectionRoutes from "./routes/connection.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
 dotenv.config({ path: "/Users/youngjaekim/Desktop/linkedin_self/.env" });
 const PORT = process.env.PORT;
@@ -20,6 +21,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 // notification
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/connections", connectionRoutes);
 app.listen(PORT, () => {
   console.info(`Server is running in ${PORT} `);
   connectDB();
