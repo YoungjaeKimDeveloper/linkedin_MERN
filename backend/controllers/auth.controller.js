@@ -20,6 +20,14 @@ export const signup = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Username is existed" });
     }
+    if (password.length < 6) {
+      return res
+        .status(401)
+        .json({
+          success: false,
+          message: "Password should be at least 6 letters",
+        });
+    }
     const newUser = new User({ name, username, email, password });
     await newUser.save();
     const token = generateToken(newUser._id);
