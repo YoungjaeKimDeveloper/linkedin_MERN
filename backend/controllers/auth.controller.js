@@ -21,12 +21,10 @@ export const signup = async (req, res) => {
         .json({ success: false, message: "Username is existed" });
     }
     if (password.length < 6) {
-      return res
-        .status(401)
-        .json({
-          success: false,
-          message: "Password should be at least 6 letters",
-        });
+      return res.status(401).json({
+        success: false,
+        message: "Password should be at least 6 letters",
+      });
     }
     const newUser = new User({ name, username, email, password });
     await newUser.save();
@@ -56,9 +54,12 @@ export const signup = async (req, res) => {
 // 로그인 기능
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
     // 아이디로 찾기
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
+
+    console.log("받은 패스워드", password);
+    console.log("찾은 유저", user);
     if (!user) {
       return res
         .status(401)
@@ -108,7 +109,7 @@ export const logout = async (req, res) => {
 export const checkAuth = async (req, res) => {
   try {
     const user = req.user;
-    console.info(user);
+
     return res.status(200).json({ success: true, user: user });
   } catch (error) {
     return res

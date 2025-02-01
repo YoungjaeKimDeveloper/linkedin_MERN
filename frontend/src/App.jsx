@@ -8,7 +8,7 @@ import Layout from "../components/layout/Layout";
 import HomePage from "../pages/HomePage";
 // Auth - Pages
 import SignUpPage from "../pages/auth/SignUpPage";
-import LoginPage from "../pages/auth/SignUpPage";
+import LoginPage from "../pages/auth/LoginPage";
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../lib/axios";
 
@@ -30,7 +30,6 @@ const App = () => {
     },
   });
 
-  console.log("authUser", authUser);
   // Protect the routes
   if (isLoading) {
     return (
