@@ -7,9 +7,11 @@ import { Home, Users, Bell, User, LogOut, Cone } from "lucide-react";
 
 const Navbar = () => {
   // 다른곳에서 Key값 불른것 가져오기
+  // Query로 불러오는값들은 항상 Data 안에 담겨져셔 들어오게됌
+  const queryClient = useQueryClient();
+
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
   // Notification 불러오기
-  const queryClient = useQueryClient();
   const { data: notifications } = useQuery({
     queryKey: ["notification"],
     queryFn: async () => {
@@ -23,8 +25,10 @@ const Navbar = () => {
         toast.error(error?.response?.data?.message || "Something went wrong");
       }
     },
+    // authUser 가있을때만 불러오게할수있음
     enabled: !!authUser,
   });
+
   const { data: connectionRequests } = useQuery({
     // 캐싱할수 있게 키 만들어주기
     queryKey: ["connectionRequests"],
@@ -54,8 +58,8 @@ const Navbar = () => {
       toast.success("User Logged Out✅");
       // What is this for?
 
-      // 기존의 상태를 지우고
-      // 최신상태의 query 를 가져오게 하는것
+      
+      // 최샌상태로 업데이트해줌
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
     },
     onError: (error) => {

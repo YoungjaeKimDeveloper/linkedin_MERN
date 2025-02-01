@@ -11,14 +11,19 @@ const LoginForm = () => {
   // 여기에서 부터 이해안됨 (Get용)
   const queryClient = useQueryClient();
   // Query Mutation(POST용)
+  // Mutate ->실제로 실행되는 함수
   const { mutate: loginMutation, isLoading } = useMutation({
+    // 나중에 캐싱할 수 있도록 authUser넣어주기
     mutationKey: ["authUser"],
+    // 실제로 실핻되는 Function = mutationFn
     mutationFn: async (userData) => {
-      console.log("실제로 전달되는 데이터", userData);
+      // console.log("실제로 전달되는 데이터", userData);
       const res = await axiosInstance.post("/auth/login", userData);
-      console.log("응답받은 데이터", res);
+      // console.log("응답받은 데이터", res);
       return res?.data?.user;
     },
+    // TRY - CATCH 대신에 성공 /실패 될경우 롤백함수 실행해주기
+    // queryClient.invalidateQueries({ queryKey: ["authUser"] }); -> Key 값 실제로 업데이트 해주기
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
     },
@@ -28,6 +33,7 @@ const LoginForm = () => {
   });
   const handleSubmit = (e) => {
     e.preventDefault();
+    // 실제로 함수 이름은 login mutaiton 위에서 불러와서 실행해주기
     loginMutation({ username, password });
     setUsername("");
     setPassword("");
