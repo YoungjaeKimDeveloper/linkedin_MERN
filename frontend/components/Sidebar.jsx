@@ -22,7 +22,7 @@ export default function Sidebar({ user }) {
           />
           <h2 className="text-xl font-semibold mt-2">{user.name}</h2>
         </Link>
-        <p className="text-info">{user.headline || <p>Headline</p>}</p>
+        <p className="text-info">{user.headline || <span>Headline</span>}</p>
         <p className="text-info text-xs">
           {/* Connection.length */}
           {user?.connections?.length} connections

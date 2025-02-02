@@ -1,3 +1,4 @@
+// import cloudinary from "../lib/cloudinary.js";
 import cloudinary from "../lib/cloudinary.js";
 import Notification from "../model/notification.js";
 import { Post } from "../model/Post.model.js";
@@ -41,6 +42,7 @@ export const createPost = async (req, res) => {
         content: content,
       });
     }
+    await newPost.save(); // DB에 저장
     return res.status(201).json({ success: true, message: "POST CREATED ✅" });
     // Post에 이미지가 없는경우
   } catch (error) {

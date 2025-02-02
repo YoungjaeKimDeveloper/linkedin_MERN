@@ -2,6 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../lib/axios.js";
 import Sidebar from "../components/Sidebar.jsx";
+import PostCreation from "../components/PostCreation.jsx";
 const HomePage = () => {
   // Fetch Auth User
   // Key로 캐싱해서 불러오기
@@ -44,7 +45,7 @@ const HomePage = () => {
   console.log("recommendedUsers", recommendedUsers);
   return (
     // 전체적인 Layout 잡아주기
-    // 항상 Layout + Mobile First로 잡아주기
+    // 항상 Layout + Mobile First로 <
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
       {/* Sidebar 위치 잡아주기  */}
       <div className="hidden lg:block lg:col-span-1">

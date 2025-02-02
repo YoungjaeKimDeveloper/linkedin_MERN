@@ -14,6 +14,7 @@ import notificationRoutes from "./routes/notification.routes.js";
 dotenv.config({ path: "/Users/youngjaekim/Desktop/linkedin_self/.env" });
 const PORT = process.env.PORT;
 const app = express();
+app.use(express.json({ limit: "5mb" }));
 // Middleware
 // Axios랑 맞춰주기 (credentials)
 app.use(
@@ -22,8 +23,9 @@ app.use(
     credentials: true,
   })
 );
-app.use(express.json());
+
 app.use(cookieParser());
+
 // Routes api should be common
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);

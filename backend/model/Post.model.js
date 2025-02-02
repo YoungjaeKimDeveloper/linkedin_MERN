@@ -14,7 +14,7 @@ const PostSchema = new mongoose.Schema({
     type: String,
   },
   // 좋아요 / 코멘트
-  commnets: [
+  comments: [
     {
       user: {
         type: mongoose.Schema.Types.ObjectId,
