@@ -5,14 +5,16 @@ export const getSuggestions = async (req, res) => {
   // 나중에 창옆에 보여줄거
   try {
     const users = await User.find({
-      id: {
+      _id: {
         $ne: req.user_id,
         $nin: req.user.connections,
       },
     })
       .select("name username profilePicture headline ")
       .limit(3);
-    return res.status(200).json({ success: true, users: users });
+    return res
+      .status(200)
+      .json({ success: true, users: users, testing: "Hello" });
   } catch (error) {
     console.error("ERROR IN [getSuggestions]", error.message);
     return res.status(500).json({

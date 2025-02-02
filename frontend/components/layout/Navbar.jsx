@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import React from "react";
 import { axiosInstance } from "../../lib/axios";
 import toast from "react-hot-toast";
@@ -58,7 +58,6 @@ const Navbar = () => {
       toast.success("User Logged Out✅");
       // What is this for?
 
-      
       // 최샌상태로 업데이트해줌
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
     },
