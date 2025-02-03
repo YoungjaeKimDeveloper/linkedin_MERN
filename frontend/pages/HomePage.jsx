@@ -1,8 +1,13 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../lib/axios.js";
+// Components
 import Sidebar from "../components/Sidebar.jsx";
 import PostCreation from "../components/PostCreation.jsx";
+import Post from "../components/Post.jsx";
+import RecommendedUser from "../components/RecommendedUser.jsx";
+// Lucid
+import { Users } from "lucide-react";
 const HomePage = () => {
   // Fetch Auth User
   // Key로 캐싱해서 불러오기
@@ -41,7 +46,6 @@ const HomePage = () => {
       }
     },
   });
-  console.log("Posts", posts);
   console.log("recommendedUsers", recommendedUsers);
   return (
     // 전체적인 Layout 잡아주기
@@ -54,7 +58,38 @@ const HomePage = () => {
       {/* Order first : The components appars in thr first place. */}
       <div className="col-span-1 lg:col-span-2 order-first lg:order-none">
         <PostCreation user={authUser} />
+        {/* Post 불러와주기 */}
+        {/* 항상 컴포넌트 깔끔하게 유지해주기 */}
+        {posts?.posts.map((post) => (
+          <Post key={post._id} post={post} />
+        ))}
       </div>
+      {/* 포스팅 없을때 */}
+      {/* 항상  */}
+      {posts?.length === 0 && (
+        <div className="bg-white rounded-lg shadow p-8 text-center">
+          <div className="mb-6">
+            <Users size={64} className="mx-auto text-blue-500" />
+          </div>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">
+            No Posts Yet
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Connect with others to start seeing posts in your feed!
+          </p>
+        </div>
+      )}
+      {/* 사이드바에 유저 나타내주기 */}
+      {recommendedUsers?.length > 0 && (
+        <div className="col-span-1 lg:col-span-1 hidden lg:block">
+          <div className="bg-secondary rounded-lg shadow p-4">
+            <h2 className="font-semibold mb-4">People you may know</h2>
+            {recommendedUsers?.map((user) => (
+              <RecommendedUser key={user._id} user={user} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

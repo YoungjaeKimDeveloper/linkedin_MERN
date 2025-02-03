@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import { toast } from "react-hot-toast";
@@ -37,14 +37,28 @@ const PostCreation = ({ user }) => {
       );
     },
   });
-
+  // 이미지 파일을 인코등 base 64 로 변환하는과정
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+    if (file) {
+      readFileAsDataURL(file).then((base64) => {
+        setImage(base64);
+        setImagePriview(base64);
+      });
+    } else {
+      setImage(null);
+      setImagePriview(null);
+    }
+  };
+  // 직접적으로 creationg 하는 Part
   const handlePostCreation = async () => {
     try {
+      // 백엔드로 보내줄 데이터 모아주기
       const postData = { content };
 
       if (image) {
-        const base64Image = await readFileAsDataURL(image);
-        postData.image = base64Image;
+        postData.image = image;
       }
       createPostMutation(postData);
     } catch (error) {
@@ -59,18 +73,6 @@ const PostCreation = ({ user }) => {
     setImagePriview("");
   };
   // 이미지 + 이미지 Preview 설정하기
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
-    if (file) {
-      console.log("이미지 파일이 생성되었습니다.", file);
-      console.log(imagePriview);
-      readFileAsDataURL(file).then(setImagePriview);
-    } else {
-      setImage(null);
-      setImagePriview(null);
-    }
-  };
 
   const readFileAsDataURL = (file) => {
     return new Promise((resolve, reject) => {
@@ -80,6 +82,15 @@ const PostCreation = ({ user }) => {
       reader.readAsDataURL(file); // base 64
     });
   };
+  // 데이터 불러와주기
+  const { data: posts } = useQuery({
+    queryKey: ["posts"],
+    queryFn: async () => {
+      const res = await axiosInstance.get("/posts");
+      return res.data;
+    },
+  });
+  console.log(posts);
   return (
     <div className="bg-gray-100 rounded-lg shadow mb-4 p-4">
       <div className="flex space-x-3">
