@@ -12,7 +12,7 @@ const HomePage = () => {
   // Fetch Auth User
   // Key로 캐싱해서 불러오기
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
-
+  // 받는 데이터는 항상 return 으로 뭘 받아 왔는지 보내주어야함
   const { data: recommendedUsers, isLoading } = useQuery({
     queryKey: ["recommendedUsers"],
     queryFn: async () => {

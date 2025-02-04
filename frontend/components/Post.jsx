@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { axiosInstance } from "../lib/axios";
-import { Loader, Trash2 } from "lucide-react";
+import { Loader, MessageCircle, Share2, ThumbsUp, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import PostAction from "./PostAction";
 
 const Post = ({ post }) => {
   const queryClient = useQueryClient();
@@ -19,6 +20,7 @@ const Post = ({ post }) => {
   // 실제 작성자인지 확인하기 ✅
   const isOwner = authUser._id === post.authUser?._id;
   // 현재 User가 클릭했으면 Blue로 바꿔주기
+  // 현재 로그인한 User의 ID가 Like에 들어가있으면 블루로 바꿔주기
   const isLiked = post.likes.includes(authUser?._id);
   // 포스트 지워주기
   const { mutate: deletePost, isPending: isDeleteLoading } = useMutation({
@@ -78,8 +80,9 @@ const Post = ({ post }) => {
       );
     },
   });
-
+  const handleLikePost = async () => {};
   return (
+    // 전체 포스팅 div태그로 감싸주기
     <div className="bg-gray-300 rounded-lg shadow mb-4">
       <div className="p-4">
         <div className="flex items-center justify-between mb-4">
@@ -111,6 +114,32 @@ const Post = ({ post }) => {
               )}
             </button>
           )}
+        </div>
+        <p className="mb-4">{post.content}</p>
+        {post.image && (
+          <img
+            src={post.image}
+            alt="Post content"
+            className="rounded-lg w-full mb-4"
+          />
+        )}
+        <div className="flex justify-between text-info">
+          <PostAction
+            icon={
+              <ThumbsUp
+                size={18}
+                className={isLiked ? "text-blue-500 fill-blue-300" : ""}
+              />
+            }
+            text={`Like (${post.likes.length})`}
+            onClick={handleLikePost}
+          />
+          <PostAction
+            icon={<MessageCircle size={18} />}
+            text={`Comment (${comments.length})`}
+            onClick={() => setShowComments(!showComments)}
+          />
+          <PostAction icon={<Share2 size={18} />} text="Share" />
         </div>
       </div>
     </div>
