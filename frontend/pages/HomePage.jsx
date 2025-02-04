@@ -12,6 +12,7 @@ const HomePage = () => {
   // Fetch Auth User
   // Key로 캐싱해서 불러오기
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
+
   const { data: recommendedUsers, isLoading } = useQuery({
     queryKey: ["recommendedUsers"],
     queryFn: async () => {
@@ -37,15 +38,13 @@ const HomePage = () => {
     // Query를 Caching 해줄수 있는 Key 설정
     queryKey: ["posts"],
     queryFn: async () => {
-      try {
-        const res = await axiosInstance.get("/posts");
-        return res?.data?.posts;
-      } catch (error) {
-        console.error("Failed fetching posts", error?.response?.data?.message);
-        return;
-      }
+      console.log("여기에서 실제로 가져와 지는 데이터", posts);
+      const res = await axiosInstance.get("/posts");
+      return res?.data;
     },
   });
+  console.log("포스팅 데이터 구조 확인:", posts);
+
   console.log("recommendedUsers", recommendedUsers);
   return (
     // 전체적인 Layout 잡아주기
@@ -60,7 +59,7 @@ const HomePage = () => {
         <PostCreation user={authUser} />
         {/* Post 불러와주기 */}
         {/* 항상 컴포넌트 깔끔하게 유지해주기 */}
-        {posts?.posts.map((post) => (
+        {posts?.map((post) => (
           <Post key={post._id} post={post} />
         ))}
       </div>

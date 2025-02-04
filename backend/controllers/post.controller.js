@@ -9,10 +9,11 @@ export const getFeedPosts = async (req, res) => {
     const posts = await Post.find({
       author: { $in: [...req.user.connections, req.user._id] },
     })
+      // Populate 해서 가져오기
       .populate("author", "name username profilePicture headline ")
       .populate("comments.user", "name username profilePictrue")
       .sort({ createdAt: -1 });
-    return res.status(200).json({ success: true, posts });
+    return res.status(200).json(posts);
   } catch (error) {
     console.error("ERROR IN [getFeedPosts]", error.message);
     return res.status(500).json({
@@ -58,13 +59,16 @@ export const deletePost = async (req, res) => {
   try {
     // 지울려고하는 User와 작성자 User 맞는지 확인
     const { id } = req.params;
+    console.log("아이디가 여기 있습니다", id);
     const selectedPost = await Post.findById(id);
     // 포스터를 찾지 못한경우
+    console.log("포스터", selectedPost);
     if (!selectedPost) {
       return res
         .status(404)
         .json({ success: false, message: "CANNOT FIND THE POST" });
     }
+    console.log(req.user._id);
     if (req.user._id.toString() !== selectedPost.author.toString()) {
       return res
         .status(401)
@@ -72,14 +76,15 @@ export const deletePost = async (req, res) => {
     }
     // 클라우드 에서 사진 지워주기
     if (selectedPost.image) {
-      await cloudinary.destroy(
+      await cloudinary.uploader.destroy(
         selectedPost.image.split("/").pop().split(".")[0]
       );
     }
     // 데이터 베이스에서 지워주기
-    await Post.findOneAndDelete(id);
+    await Post.findOneAndDelete({ _id: id });
     return res.status(200).json({ success: true, message: "POST DELETED ✅" });
   } catch (error) {
+    console.log("지워지지않는이유: ", error);
     return res.status(500).json({
       success: false,
       message: `"ERROR IN [deletePost]", ${error.message}`,

@@ -19,7 +19,7 @@ const PostCreation = ({ user }) => {
     // 실제로 createPost에 사용되는 Function 값
     mutationFn: async (postData) => {
       console.log(postData);
-      const res = axiosInstance.post("/posts/create", postData);
+      const res = await axiosInstance.post("/posts/create", postData);
       return res?.data;
     },
     // 성공시
