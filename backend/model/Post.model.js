@@ -13,9 +13,10 @@ const PostSchema = new mongoose.Schema({
   image: {
     type: String,
   },
-  // 좋아요 / 코멘트
+  // Subdocument Pattern
   comments: [
     {
+      //  이렇게 되먄 User 필으듸 정보들을 가져다가 사용할수 있게됨
       user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

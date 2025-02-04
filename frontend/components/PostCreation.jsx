@@ -25,6 +25,7 @@ const PostCreation = ({ user }) => {
     // 성공시
     onSuccess: () => {
       toast.success("Post Created!  ✅");
+      // Posts 새로 Refresh 해주기
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       resetForm();
     },
@@ -55,6 +56,7 @@ const PostCreation = ({ user }) => {
   const handlePostCreation = async () => {
     try {
       // 백엔드로 보내줄 데이터 모아주기
+      // Data Warpping
       const postData = { content };
 
       if (image) {
@@ -83,14 +85,14 @@ const PostCreation = ({ user }) => {
     });
   };
   // 데이터 불러와주기
-  const { data: posts } = useQuery({
-    queryKey: ["posts"],
-    queryFn: async () => {
-      const res = await axiosInstance.get("/posts");
-      return res.data;
-    },
-  });
-  console.log(posts);
+  // const { data: posts } = useQuery({
+  //   queryKey: ["posts"],
+  //   queryFn: async () => {
+  //     const res = await axiosInstance.get("/posts");
+  //     return res.data;
+  //   },
+  // });
+  // console.log(posts);
   return (
     <div className="bg-gray-100 rounded-lg shadow mb-4 p-4">
       <div className="flex space-x-3">

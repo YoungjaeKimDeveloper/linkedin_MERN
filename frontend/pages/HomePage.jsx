@@ -55,6 +55,7 @@ const HomePage = () => {
         <Sidebar user={authUser} />
       </div>
       {/* Order first : The components appars in thr first place. */}
+      {/* 포스트 만들기  */}
       <div className="col-span-1 lg:col-span-2 order-first lg:order-none">
         <PostCreation user={authUser} />
         {/* Post 불러와주기 */}
