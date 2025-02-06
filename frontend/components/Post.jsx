@@ -12,6 +12,14 @@ import {
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import PostAction from "./PostAction";
+// 시간 포멧해주는 함수
+import {
+  format,
+  formatDistance,
+  formatDistanceToNow,
+  formatRelative,
+  subDays,
+} from "date-fns";
 
 const Post = ({ post }) => {
   const queryClient = useQueryClient();
@@ -112,6 +120,7 @@ const Post = ({ post }) => {
       ]);
     }
   };
+  console.log(post, "포스트에 들어있는 정보");
   return (
     // 전체 포스팅 div태그로 감싸주기
     <div className="bg-gray-300 rounded-lg shadow mb-4">
@@ -130,7 +139,10 @@ const Post = ({ post }) => {
                 <h3 className="font-semibold">{post.author.name}</h3>
               </Link>
               <p className="text-xs text-info">{post.author?.headline}</p>
-              {/* todo: add post created at field and format it */}
+              {/* 시간 데이터 포멧 */}
+              {formatDistanceToNow(new Date(post?.createdAt), {
+                addSuffix: true,
+              })}
             </div>
           </div>
           {isOwner && (
@@ -191,9 +203,9 @@ const Post = ({ post }) => {
                       <span className="font-semibold mr-2">
                         {comment.user.name}
                       </span>
-                      {/* <span className="text-xs text-info">
+                      <span className="text-xs text-info">
                         {formatDistanceToNow(new Date(comment.createdAt))}
-                      </span> */}
+                      </span>
                     </div>
                     <p>{comment.content}</p>
                   </div>
