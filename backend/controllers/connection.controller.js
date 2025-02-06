@@ -4,7 +4,8 @@ import { User } from "../model/User.model.js";
 
 export const sendConnectionRequest = async (req, res) => {
   try {
-    // 유저 찾아서 request 보내주기
+    // 로그인 유저 - 현재 req.user_id
+    // 로그인 받는유저 - selected User
     const recipientID = req.params.id;
     const userID = req.user._id;
     if (recipientID.toString() === userID.toString()) {
@@ -13,7 +14,8 @@ export const sendConnectionRequest = async (req, res) => {
         message: "YOU CANNOT SEND REQUEST TO YOURSELF",
       });
     }
-    if (req.user.connections.includes(recipientID)) {
+    const currentUser = await User.findById({ userID });
+    if (currentUser.connections.includes(recipientID)) {
       return res.status(401).json({
         success: false,
         message: "The user is already connected ✅",
@@ -30,6 +32,7 @@ export const sendConnectionRequest = async (req, res) => {
         message: "Request is pending...",
       });
     }
+    // Notification 따로 만들어주기
     const newRequest = new ConnectionRequest({
       sender: userID,
       recipient: recipientID,
@@ -123,7 +126,7 @@ export const rejectConnectionRequest = async (req, res) => {
     if (connectionRequest.recipient.toString() !== userId.toString()) {
       return res.status(403).json({ success: false, message: "No Authority" });
     }
-    if (connectionRequest.status != "pending") {
+    if (connectionRequest.status !== "pending") {
       return res
         .status(400)
         .json({ success: false, message: "connection has been processed" });

@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Loader } from "lucide-react";
+import { Home, Loader } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 // Layout
 import Layout from "../components/layout/Layout";
@@ -41,7 +41,10 @@ const App = () => {
   return (
     <Layout>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/"
+          element={authUser ? <HomePage /> : <Navigate to={"/signup"} />}
+        />
         {/* Route - Auth */}
         <Route
           path="/signup"

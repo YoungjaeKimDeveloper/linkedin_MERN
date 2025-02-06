@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { Home, UserPlus, Bell } from "lucide-react";
 
 export default function Sidebar({ user }) {
+  if (!user) {
+    return;
+  }
   return (
     <div className="bg-gray-200 rounded-lg shadow">
       <div className="p-4 text-center">
@@ -9,15 +12,15 @@ export default function Sidebar({ user }) {
           className="h-16 rounded-t-lg bg-cover bg-center"
           style={{
             backgroundImage: `url("${
-              user.bannerImg || "../public/banner.png"
+              user?.bannerImg || "../public/banner.png"
             }")`,
           }}
         />
         {/* 동적으로 링크 주소 바꿔주기 */}
-        <Link to={`/profile/${user.username}`}>
+        <Link to={`/profile/${user?.username}`}>
           <img
-            src={user.profilePicture || "/avatar.png"}
-            alt={user.name}
+            src={user?.profilePicture || "/avatar.png"}
+            alt={user?.name}
             className="w-20 h-20 rounded-full mx-auto mt-[-40px]"
           />
           <h2 className="text-xl font-semibold mt-2">{user.name}</h2>
@@ -60,7 +63,7 @@ export default function Sidebar({ user }) {
       </div>
       <div className="border-t border-base-100 p-4">
         <Link
-          to={`/profile/${user.username}`}
+          to={`/profile/${user?.username}`}
           className="text-sm font-semibold"
         >
           Visit your profile

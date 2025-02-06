@@ -58,8 +58,6 @@ export const login = async (req, res) => {
     // 아이디로 찾기
     const user = await User.findOne({ username });
 
-    console.log("받은 패스워드", password);
-    console.log("찾은 유저", user);
     if (!user) {
       return res
         .status(401)
@@ -72,6 +70,7 @@ export const login = async (req, res) => {
         .status(401)
         .json({ success: false, message: "INVALID ACCESS" });
     }
+    // return 값으로 Token 반환해서 토큰 발행해주기
     const token = generateToken(user._id);
     res.cookie("jwt", token, {
       httpOnly: true, // prevent XSS attack
@@ -83,7 +82,7 @@ export const login = async (req, res) => {
       success: true,
       user: {
         ...user.toObject(), // user 객체 스프레드
-        password: undefined,
+        password: undefined, // 비밀번호만 가려주기
       },
     });
   } catch (error) {
@@ -96,6 +95,7 @@ export const login = async (req, res) => {
 // 로그아웃 기능
 export const logout = async (req, res) => {
   try {
+    // 토큰 초기화해서 JWT지워주기
     res.clearCookie("jwt");
     return res.status(200).json({ success: true, message: "LoggedOut ✅" });
   } catch (error) {
@@ -109,7 +109,6 @@ export const logout = async (req, res) => {
 export const checkAuth = async (req, res) => {
   try {
     const user = req.user;
-
     return res.status(200).json({ user });
   } catch (error) {
     return res

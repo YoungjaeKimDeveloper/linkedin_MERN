@@ -1,13 +1,14 @@
 import Notification from "../model/notification.js";
 
 export const getUserNotifications = async (req, res) => {
+  // Find할때 populate해서 찾아주기
   try {
     const notifications = await Notification.find({
       recipient: req.user._id,
     })
       .sort({ createdAt: -1 })
       .populate("relatedUser", "name username profilePicture")
-      .populate("relatedPost", "name username profilePicture");
+      .populate("relatedPost", "content image");
     return res
       .status(200)
       .json({ success: true, notifications: notifications });

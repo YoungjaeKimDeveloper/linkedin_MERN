@@ -21,7 +21,9 @@ export const verifyToken = async (req, res, next) => {
         .status(404)
         .json({ success: false, message: "CANNOT FIND THE USER" });
     }
+    // 유저로 내보내주기
     req.user = user;
+    // 미들웨어는 항상 next() 로 내보내 주어야함
     next();
   } catch (error) {
     console.error("ERROR IN [verifyToken]", error.message);

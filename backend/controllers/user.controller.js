@@ -12,9 +12,7 @@ export const getSuggestions = async (req, res) => {
     })
       .select("name username profilePicture headline ")
       .limit(3);
-    return res
-      .status(200)
-      .json({ success: true, users: users, testing: "Hello" });
+    return res.status(200).json({ success: true, users: users });
   } catch (error) {
     console.error("ERROR IN [getSuggestions]", error.message);
     return res.status(500).json({
@@ -61,6 +59,7 @@ export const updateProfile = async (req, res) => {
   //     "name": "Youngjae",
   //     "age": 20
   //   }
+  // Data Wrapping
   const newData = {};
   //   const req = { body: { name: "John", email: "john@example.com" } };
   try {
@@ -75,7 +74,7 @@ export const updateProfile = async (req, res) => {
         const profilePicture = await cloudinary.uploader.upload(
           req.body.profilePicture
         );
-        newData.profilePicture = url.secure_url;
+        newData.profilePicture = profilePicture.secure_url;
       } catch (error) {
         console.error("Failed to change profilePicture", error.message);
       }

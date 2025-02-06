@@ -93,12 +93,13 @@ const PostCreation = ({ user }) => {
   //   },
   // });
   // console.log(posts);
+
   return (
     <div className="bg-gray-100 rounded-lg shadow mb-4 p-4">
       <div className="flex space-x-3">
         <img
-          src={user.profilePicture || "../public/avatar.png"}
-          alt="user-image"
+          src={user?.profilePicture || "../public/avatar.png"}
+          alt="user?-image"
           className="size-12 rounded-full"
         />
         <textarea

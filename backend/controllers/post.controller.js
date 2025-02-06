@@ -59,16 +59,13 @@ export const deletePost = async (req, res) => {
   try {
     // 지울려고하는 User와 작성자 User 맞는지 확인
     const { id } = req.params;
-    console.log("아이디가 여기 있습니다", id);
     const selectedPost = await Post.findById(id);
-    // 포스터를 찾지 못한경우
-    console.log("포스터", selectedPost);
     if (!selectedPost) {
       return res
         .status(404)
         .json({ success: false, message: "CANNOT FIND THE POST" });
     }
-    console.log(req.user._id);
+    // 작성자와 Post Author가 같을떄만 delete해주기
     if (req.user._id.toString() !== selectedPost.author.toString()) {
       return res
         .status(401)
@@ -81,7 +78,7 @@ export const deletePost = async (req, res) => {
       );
     }
     // 데이터 베이스에서 지워주기
-    await Post.findOneAndDelete({ _id: id });
+    await selectedPost.deleteOne({ _id: id });
     return res.status(200).json({ success: true, message: "POST DELETED ✅" });
   } catch (error) {
     console.log("지워지지않는이유: ", error);
@@ -124,7 +121,7 @@ export const createComment = async (req, res) => {
       { new: true }
     ).populate("author", "name email username headline profilePicture");
     // 각 상황마다 Notification 만들어주기
-    if (postId !== req.user._id) {
+    if (post.author._id.toString() !== req.user._id.toString()) {
       const notification = new Notification({
         recipient: post.author,
         type: "comment",
@@ -161,7 +158,7 @@ export const likePost = async (req, res) => {
       const newNotification = new Notification({
         recipient: post.author,
         type: "like",
-        relatedUser: req.user._id,
+        relatedUser: userId,
         relatedPost: postId,
       });
       await newNotification.save();

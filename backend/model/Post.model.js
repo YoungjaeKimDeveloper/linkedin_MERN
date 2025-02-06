@@ -14,6 +14,7 @@ const PostSchema = new mongoose.Schema({
     type: String,
   },
   // Subdocument Pattern
+  // Comments && Likes
   comments: [
     {
       //  이렇게 되먄 User 필으듸 정보들을 가져다가 사용할수 있게됨
@@ -26,7 +27,7 @@ const PostSchema = new mongoose.Schema({
       createdAt: { type: Date, default: Date.now },
     },
   ],
-  likes: [{ type: mongoose.Schema.Types.ObjectId }],
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 export const Post = mongoose.model("Post", PostSchema);

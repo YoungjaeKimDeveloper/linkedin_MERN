@@ -18,7 +18,6 @@ const HomePage = () => {
     queryFn: async () => {
       try {
         const res = await axiosInstance.get("/users/suggestions");
-        console.log(res.data.testing);
         return res?.data?.users;
       } catch (error) {
         console.error("Error fetching data", error);
@@ -38,14 +37,11 @@ const HomePage = () => {
     // Query를 Caching 해줄수 있는 Key 설정
     queryKey: ["posts"],
     queryFn: async () => {
-      console.log("여기에서 실제로 가져와 지는 데이터", posts);
       const res = await axiosInstance.get("/posts");
       return res?.data;
     },
   });
-  console.log("포스팅 데이터 구조 확인:", posts);
 
-  console.log("recommendedUsers", recommendedUsers);
   return (
     // 전체적인 Layout 잡아주기
     // 항상 Layout + Mobile First로 <
