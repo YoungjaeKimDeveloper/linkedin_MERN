@@ -1,0 +1,9 @@
+✅ Notificaiton 4:47:31
+1. Notification Route 
+2. Notification Page 만들어주기
+
+⭐️
+Note
+- console.log("-T- ) 로 시작해서 바로 찾을수있게 해주기
+UI를 상황 별로 업데이트 해야할때는 "Switch Case"
+- 나중에 UI 보여줄때 Type 별로 바꿔줄수있도록하기 [enum을 사용하는 이유]

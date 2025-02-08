@@ -18,7 +18,6 @@ const PostCreation = ({ user }) => {
     mutationKey: ["posts"],
     // 실제로 createPost에 사용되는 Function 값
     mutationFn: async (postData) => {
-      console.log(postData);
       const res = await axiosInstance.post("/posts/create", postData);
       return res?.data;
     },
@@ -92,7 +91,6 @@ const PostCreation = ({ user }) => {
   //     return res.data;
   //   },
   // });
-  // console.log(posts);
 
   return (
     <div className="bg-gray-100 rounded-lg shadow mb-4 p-4">

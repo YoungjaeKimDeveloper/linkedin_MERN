@@ -20,7 +20,7 @@ const RecommendedUser = ({ user }) => {
     queryKey: ["connectionsStatus", user._id],
     queryFn: () => axiosInstance.get(`/connections/status/${user._id}`),
   });
-  console.log("현재 Connection Status: ", connectionStatus);
+  "현재 Connection Status: ", connectionStatus;
   // 요청 보낼때 Request가 잘못 절정됨
   const { mutate: sendConnectionRequest } = useMutation({
     mutationFn: (userId) =>

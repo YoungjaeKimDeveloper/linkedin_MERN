@@ -28,7 +28,7 @@ const HomePage = () => {
       console.log("Data fetched Successfully", data);
     },
     onError: (error) => {
-      console.log("Query Error", error?.response?.data?.message);
+      "Query Error", error?.response?.data?.message;
     },
   });
 

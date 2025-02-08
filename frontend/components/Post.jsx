@@ -26,7 +26,7 @@ const Post = ({ post }) => {
   // 실제로 useQuery에서 보낸 authUser
   // 항상 Key 값으로 Caching해서 빠르게 체크하기
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
-  console.log("확인된 유저", authUser);
+
   // 댓글 창 보여주기
   const [showComments, setShowComments] = useState(false);
   // 기존에 생성되어있던 comments를 의미함.
@@ -43,17 +43,14 @@ const Post = ({ post }) => {
   const { mutate: deletePost, isPending: isDeleteLoading } = useMutation({
     // mutationKey: ["posts"],
     mutationFn: async () => {
-      console.log(`/posts/delete/${post._id}`);
       await axiosInstance.delete(`/posts/delete/${post._id}`);
     },
     onSuccess: () => {
-      console.log("Post has been deleted");
       toast.success("Post Delete Successfully✅");
       // 항상 Posts 업데이트 해주기
       queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
     onError: (err) => {
-      console.log("Failed to delete Post", err);
       toast.error("Failed to delete Post", err?.response?.data?.message);
     },
   });
@@ -120,7 +117,7 @@ const Post = ({ post }) => {
       ]);
     }
   };
-  console.log(post, "포스트에 들어있는 정보");
+
   return (
     // 전체 포스팅 div태그로 감싸주기
     <div className="bg-gray-300 rounded-lg shadow mb-4">

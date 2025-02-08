@@ -17,9 +17,8 @@ const LoginForm = () => {
     mutationKey: ["authUser"],
     // 실제로 실핻되는 Function = mutationFn
     mutationFn: async (userData) => {
-      // console.log("실제로 전달되는 데이터", userData);
       const res = await axiosInstance.post("/auth/login", userData);
-      // console.log("응답받은 데이터", res);
+
       return res?.data?.user;
     },
     // TRY - CATCH 대신에 성공 /실패 될경우 롤백함수 실행해주기

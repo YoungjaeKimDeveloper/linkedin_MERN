@@ -9,9 +9,6 @@ export const sendConnectionRequest = async (req, res) => {
     const recipientID = req.params.id;
     const userID = req.user._id;
 
-    console.log("받는사람아이디: ", recipientID);
-    console.log("현재 로그인한 유저 아이디", userID);
-
     if (recipientID.toString() === userID.toString()) {
       return res.status(401).json({
         success: false,
@@ -47,7 +44,6 @@ export const sendConnectionRequest = async (req, res) => {
       recipient: recipientID,
       status: "pending",
     });
-    console.log("새로 생성된 Request", newRequest);
 
     await newRequest.save();
     return res
@@ -63,18 +59,15 @@ export const sendConnectionRequest = async (req, res) => {
 };
 
 export const acceptConnectionRequest = async (req, res) => {
-  console.log("AccepacceptConnectionRequesttcon: 이눌렸습니다");
   const userID = req.user._id;
   const requestId = req.params.requestedId;
 
-  console.log("로그인한 유저 ", userID);
-  console.log("요청받은 유저", requestId);
   // connectionRequest 찾아주기
   // ❌ 현재  connectionRequest가 없는상황임
   const connectionRequest = await ConnectionRequest.findById(requestId)
     .populate("sender", "name email username")
     .populate("recipient", "name username");
-  console.log("connectionRequest: ", connectionRequest);
+
   try {
     // 커넥션을 못찾는경우
     if (!connectionRequest) {

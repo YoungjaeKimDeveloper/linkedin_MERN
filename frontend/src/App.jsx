@@ -6,6 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 import Layout from "../components/layout/Layout";
 // Pages
 import HomePage from "../pages/HomePage";
+import NotificationPage from "../pages/NotificationPage";
 // Auth - Pages
 import SignUpPage from "../pages/auth/SignUpPage";
 import LoginPage from "../pages/auth/LoginPage";
@@ -54,6 +55,10 @@ const App = () => {
         <Route
           path="/login"
           element={!authUser ? <LoginPage /> : <Navigate to={"/"} />}
+        />
+        <Route
+          path="/notifications"
+          element={!authUser ? <NotificationPage /> : <Navigate to={"/"} />}
         />
       </Routes>
       <Toaster />
