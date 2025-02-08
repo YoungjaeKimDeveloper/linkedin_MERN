@@ -6,7 +6,7 @@ export const getSuggestions = async (req, res) => {
   try {
     const users = await User.find({
       _id: {
-        $ne: req.user_id,
+        $ne: req.user.id,
         $nin: req.user.connections,
       },
     })

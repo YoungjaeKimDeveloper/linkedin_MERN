@@ -188,9 +188,9 @@ const Post = ({ post }) => {
         {showComments && (
           <div className="px-4 pb-4">
             <div className="mb-4 max-h-60 overflow-y-auto">
-              {comments.map((comment) => (
+              {comments.map((comment, index) => (
                 <div
-                  key={comment._id}
+                  key={index}
                   className="mb-2 bg-base-100 p-2 rounded flex items-start"
                 >
                   <img

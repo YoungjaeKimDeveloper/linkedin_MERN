@@ -81,7 +81,6 @@ export const deletePost = async (req, res) => {
     await selectedPost.deleteOne({ _id: id });
     return res.status(200).json({ success: true, message: "POST DELETED ✅" });
   } catch (error) {
-    console.log("지워지지않는이유: ", error);
     return res.status(500).json({
       success: false,
       message: `"ERROR IN [deletePost]", ${error.message}`,
@@ -113,6 +112,8 @@ export const createComment = async (req, res) => {
   try {
     const postId = req.params.id;
     const { content } = req.body;
+    const userId = req.user.id;
+    const currentUser = await User.findById(userId);
     const post = await Post.findByIdAndUpdate(
       postId,
       {
@@ -121,7 +122,8 @@ export const createComment = async (req, res) => {
       { new: true }
     ).populate("author", "name email username headline profilePicture");
     // 각 상황마다 Notification 만들어주기
-    if (post.author._id.toString() !== req.user._id.toString()) {
+
+    if (post.author._id.toString() !== currentUser._id.toString()) {
       const notification = new Notification({
         recipient: post.author,
         type: "comment",

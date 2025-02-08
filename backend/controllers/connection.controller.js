@@ -8,36 +8,46 @@ export const sendConnectionRequest = async (req, res) => {
     // 로그인 받는유저 - selected User
     const recipientID = req.params.id;
     const userID = req.user._id;
+
+    console.log("받는사람아이디: ", recipientID);
+    console.log("현재 로그인한 유저 아이디", userID);
+
     if (recipientID.toString() === userID.toString()) {
       return res.status(401).json({
         success: false,
         message: "YOU CANNOT SEND REQUEST TO YOURSELF",
       });
     }
-    const currentUser = await User.findById({ userID });
+
+    const currentUser = await User.findById(userID);
+
     if (currentUser.connections.includes(recipientID)) {
       return res.status(401).json({
         success: false,
         message: "The user is already connected ✅",
       });
     }
+
     const existedRequest = await ConnectionRequest.findOne({
       sender: userID,
       recipient: recipientID,
       status: "pending",
     });
+
     if (existedRequest) {
       return res.status(401).json({
         success: false,
         message: "Request is pending...",
       });
     }
+
     // Notification 따로 만들어주기
     const newRequest = new ConnectionRequest({
       sender: userID,
       recipient: recipientID,
       status: "pending",
     });
+    console.log("새로 생성된 Request", newRequest);
 
     await newRequest.save();
     return res
@@ -51,16 +61,21 @@ export const sendConnectionRequest = async (req, res) => {
     });
   }
 };
-// 여기에서 부터
+
 export const acceptConnectionRequest = async (req, res) => {
+  console.log("AccepacceptConnectionRequesttcon: 이눌렸습니다");
+  const userID = req.user._id;
+  const requestId = req.params.requestedId;
+
+  console.log("로그인한 유저 ", userID);
+  console.log("요청받은 유저", requestId);
+  // connectionRequest 찾아주기
+  // ❌ 현재  connectionRequest가 없는상황임
+  const connectionRequest = await ConnectionRequest.findById(requestId)
+    .populate("sender", "name email username")
+    .populate("recipient", "name username");
+  console.log("connectionRequest: ", connectionRequest);
   try {
-    const userID = req.user._id;
-    const requestId = req.params.requestedId;
-    // connectionRequest 찾아주기
-    const connectionRequest = await ConnectionRequest.findOne({
-      sender: userID,
-      recipient: requestId,
-    });
     // 커넥션을 못찾는경우
     if (!connectionRequest) {
       return res
@@ -74,18 +89,23 @@ export const acceptConnectionRequest = async (req, res) => {
         .json({ success: false, message: "connection has been processed" });
     }
     // 권한이 없는경우
-    if (connectionRequest.recipient.toString() !== userID.toString()) {
-      return res.status(401).json({ success: false, message: "NO AUTHORITY" });
+    if (connectionRequest.recipient._id.toString() !== userID.toString()) {
+      return res.status(401).json({
+        success: false,
+        message: "NO AUTHORITY to accpet the Request",
+      });
     }
     connectionRequest.status = "accepted";
     await connectionRequest.save();
 
     // 각각에 connection에 추가해주기;
+    // 현재 로그인 한 유저
     await User.findByIdAndUpdate(
       { _id: userID },
       { $addToSet: { connections: requestId } },
       { new: true }
     );
+    // 요청 받은 유저
     await User.findByIdAndUpdate(
       { _id: requestId },
       { $addToSet: { connections: userID } },
@@ -105,7 +125,7 @@ export const acceptConnectionRequest = async (req, res) => {
       acceptConnectionRequest,
     });
   } catch (error) {
-    console.error("ERROR IN [sendConnectionRequest]", error.message);
+    console.error("ERROR IN [acceptConnectionRequest]", error.message);
     return res.status(500).json({
       success: false,
       message: `"ERROR IN [acceptConnectionRequest]", ${error.message}`,
@@ -206,14 +226,17 @@ export const removeConnection = async (req, res) => {
     });
   }
 };
-
+// 여기에서
+// 현재 에러가 나오고있는 부분
 export const getConnectionStatus = async (req, res) => {
   try {
     const currentUserId = req.user._id;
     const targetUserID = req.params.userId;
+
     const currentUser = await User.findById(currentUserId);
+
     if (currentUser.connections.includes(targetUserID)) {
-      return res.status(200).json({ success: true, message: "accepted" });
+      return res.status(200).json({ success: true, status: "connected" });
     }
     const pendingRequest = await ConnectionRequest.findOne({
       $or: [
@@ -225,12 +248,13 @@ export const getConnectionStatus = async (req, res) => {
 
     if (pendingRequest) {
       if (pendingRequest.sender.toString() === currentUserId.toString()) {
-        return res.status(200).json({ success: true, message: "pending" });
+        return res.status(200).json({ success: true, status: "pending" });
       } else {
-        return res.json({ status: "received" });
+        return res.json({ status: "received", requestId: pendingRequest._id });
       }
     }
-    return res.json({ status: "not connected" });
+
+    return res.json({ status: "not_connected" });
   } catch (error) {
     console.error("ERROR IN [getConnectionStatus]", error.message);
     return res.status(500).json({
